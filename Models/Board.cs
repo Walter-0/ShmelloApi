@@ -16,7 +16,7 @@ namespace ShmelloApi.Models
         public int UserId { get; set; }
 
         [JsonIgnore]
-        public User User { get; set; }
+        public User User { get; set; } = null!;
         public ICollection<Swimlane> Swimlanes { get; } = new List<Swimlane>();
     }
 }

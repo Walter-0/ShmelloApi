@@ -30,7 +30,7 @@ namespace ShmelloApi.Controllers
             {
                 return NotFound();
             }
-            return await _context.Boards.ToListAsync();
+            return await _context.Boards.Include(b => b.Swimlanes).ToListAsync();
         }
 
         // GET: api/Boards/5
@@ -41,7 +41,8 @@ namespace ShmelloApi.Controllers
             {
                 return NotFound();
             }
-            var board = await _context.Boards.FindAsync(id);
+            var board = await _context.Boards.SingleAsync(b => b.Id == id);
+            _context.Entry(board).Collection(b => b.Swimlanes).Load();
 
             if (board == null)
             {
@@ -91,10 +92,8 @@ namespace ShmelloApi.Controllers
             {
                 return Problem("Entity set 'ApiDbContext.Boards' is null.");
             }
-            // Hard coded for testing
-            User user = _context.Users.Single(u => u.Id == boardCreateDto.UserId);
-            // Hard coded for testing
 
+            User user = _context.Users.Single(u => u.Id == boardCreateDto.UserId);
             Board board = new() { Title = boardCreateDto.Title, User = user };
 
             _context.Boards.Add(board);
