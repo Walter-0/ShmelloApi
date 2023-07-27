@@ -134,32 +134,26 @@ namespace ShmelloApi.Migrations
 
             modelBuilder.Entity("ShmelloApi.Models.Card", b =>
                 {
-                    b.HasOne("ShmelloApi.Models.Swimlane", "Swimlane")
+                    b.HasOne("ShmelloApi.Models.Swimlane", null)
                         .WithMany("Cards")
                         .HasForeignKey("SwimlaneId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ShmelloApi.Models.User", "User")
+                    b.HasOne("ShmelloApi.Models.User", null)
                         .WithMany("Cards")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Swimlane");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ShmelloApi.Models.Swimlane", b =>
                 {
-                    b.HasOne("ShmelloApi.Models.Board", "Board")
+                    b.HasOne("ShmelloApi.Models.Board", null)
                         .WithMany("Swimlanes")
                         .HasForeignKey("BoardId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Board");
                 });
 
             modelBuilder.Entity("ShmelloApi.Models.Board", b =>

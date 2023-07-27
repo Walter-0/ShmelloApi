@@ -14,8 +14,6 @@ namespace ShmelloApi.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Board> Boards { get; set; }
-
-        // public DbSet<UserBoard> UserBoards { get; set; }
         public DbSet<Swimlane> Swimlanes { get; set; }
         public DbSet<Card> Cards { get; set; }
     }

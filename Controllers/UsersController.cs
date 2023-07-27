@@ -29,7 +29,7 @@ namespace ShmelloApi.Controllers
             {
                 return NotFound();
             }
-            return await _context.Users.ToListAsync();
+            return await _context.Users.Include(u => u.Boards).ToListAsync();
         }
 
         // GET: api/Users/5
@@ -40,7 +40,8 @@ namespace ShmelloApi.Controllers
             {
                 return NotFound();
             }
-            var user = await _context.Users.FindAsync(id);
+            var user = await _context.Users.SingleAsync(u => u.Id == id);
+            _context.Entry(user).Collection(u => u.Boards).Load();
 
             if (user == null)
             {
