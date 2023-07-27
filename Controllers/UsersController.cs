@@ -29,11 +29,7 @@ namespace ShmelloApi.Controllers
             {
                 return NotFound();
             }
-            return await _context.Users
-                .Include(u => u.Boards)
-                .ThenInclude(b => b.Swimlanes)
-                .ThenInclude(s => s.Cards)
-                .ToListAsync();
+            return await _context.Users.Include(u => u.Boards).ToListAsync();
         }
 
         // GET: api/Users/5
@@ -44,22 +40,15 @@ namespace ShmelloApi.Controllers
             {
                 return NotFound();
             }
-            var user = await _context.Users.SingleAsync(u => u.Id == id);
-            _context.Entry(user).Collection(u => u.Boards).Load();
-
-            foreach (var board in user.Boards)
-            {
-                _context.Entry(board).Collection(b => b.Swimlanes).Load();
-                foreach (var swimlane in board.Swimlanes)
-                {
-                    _context.Entry(swimlane).Collection(s => s.Cards).Load();
-                }
-            }
+            var user = await _context.Users.FindAsync(id);
 
             if (user == null)
             {
                 return NotFound();
             }
+
+            _context.Entry(user).Collection(u => u.Boards).Load();
+            _context.Entry(user).Collection(u => u.Cards).Load();
 
             return user;
         }

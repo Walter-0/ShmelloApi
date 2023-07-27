@@ -30,7 +30,7 @@ namespace ShmelloApi.Controllers
             {
                 return NotFound();
             }
-            return await _context.Swimlanes.ToListAsync();
+            return await _context.Swimlanes.Include(s => s.Cards).ToListAsync();
         }
 
         // GET: api/Swimlanes/5
@@ -48,6 +48,7 @@ namespace ShmelloApi.Controllers
                 return NotFound();
             }
 
+            _context.Entry(swimlane).Collection(s => s.Cards).Load();
             return swimlane;
         }
 
@@ -89,14 +90,20 @@ namespace ShmelloApi.Controllers
         {
             if (_context.Swimlanes == null)
             {
-                return Problem("Entity set 'ApiDbContext.Swimlanes'  is null.");
+                return Problem("Entity set 'ApiDbContext.Swimlanes' is null.");
             }
             if (_context.Boards == null)
             {
-                return Problem("Entity set 'ApiDbContext.Boards'  is null.");
+                return Problem("Entity set 'ApiDbContext.Boards' is null.");
             }
 
-            Board board = _context.Boards.Single(b => b.Id == swimlaneCreateDto.BoardId);
+            var board = await _context.Boards.FindAsync(swimlaneCreateDto.BoardId);
+
+            if (board == null)
+            {
+                return NotFound();
+            }
+
             Swimlane swimlane = new() { Title = swimlaneCreateDto.Title, Board = board };
 
             _context.Swimlanes.Add(swimlane);
